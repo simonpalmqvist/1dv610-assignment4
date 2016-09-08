@@ -21,9 +21,24 @@ class LoginView {
 	 */
 	public function response() {
 		$message = '';
-		
-		$response = $this->generateLoginFormHTML($message);
-		//$response .= $this->generateLogoutButtonHTML($message);
+        $isAuthenticated = false;
+
+        if ($this->isLoginAttempt()) {
+            try {
+                $this->validateFields();
+                $isAuthenticated = true;
+            } catch (Exception $error) {
+                $message = $error->getMessage();
+            }
+            $this->getRequestUserName();
+        }
+
+        $response = $this->generateLoginFormHTML($message);
+
+        if ($isAuthenticated) {
+            $response = $this->generateLogoutButtonHTML($message);
+        }
+
 		return $response;
 	}
 
@@ -44,7 +59,7 @@ class LoginView {
 	/**
 	* Generate HTML code on the output buffer for the logout button
 	* @param $message, String output message
-	* @return  void, BUT writes to standard output!
+	* @return  string, BUT writes to standard output!
 	*/
 	private function generateLoginFormHTML($message) {
 		return '
@@ -54,7 +69,7 @@ class LoginView {
 					<p id="' . self::$messageId . '">' . $message . '</p>
 					
 					<label for="' . self::$name . '">Username :</label>
-					<input type="text" id="' . self::$name . '" name="' . self::$name . '" value="" />
+					<input type="text" id="' . self::$name . '" name="' . self::$name . '" value="' . $this->getUsername() . '" />
 
 					<label for="' . self::$password . '">Password :</label>
 					<input type="password" id="' . self::$password . '" name="' . self::$password . '" />
@@ -67,10 +82,35 @@ class LoginView {
 			</form>
 		';
 	}
-	
-	//CREATE GET-FUNCTIONS TO FETCH REQUEST VARIABLES
+
+	private function validateFields() {
+	    if (empty($this->getRequestUserName())) {
+            throw new Exception("Username is missing");
+        }
+
+        if (empty($this->getRequestPassword())) {
+            throw new Exception("Password is missing");
+        }
+    }
+
+    private function getUsername() {
+        $name = '';
+        if ($this->isLoginAttempt()) {
+            $name = $this->getRequestUserName();
+        }
+        return $name;
+    }
+
+	private function isLoginAttempt() {
+	    return isset($_POST[self::$login]);
+    }
+
 	private function getRequestUserName() {
-		//RETURN REQUEST VARIABLE: USERNAME
+	    return $_POST[self::$name];
 	}
+
+    private function getRequestPassword() {
+        return $_POST[self::$password];
+    }
 	
 }
