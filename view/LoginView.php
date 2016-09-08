@@ -20,22 +20,27 @@ class LoginView {
 	 * @return  void BUT writes to standard output and cookies!
 	 */
 	public function response() {
-		$message = '';
-        $isAuthenticated = false;
+	    $message = '';
 
-        if ($this->isLoginAttempt()) {
+        if (!$this->isLoggedIn() && $this->isLoginAttempt()) {
             try {
                 $this->validateFields();
-                $isAuthenticated = true;
-            } catch (Exception $error) {
+                $this->authenticate();
+                $message = 'Welcome';
+            } catch (\Exception $error) {
                 $message = $error->getMessage();
             }
             $this->getRequestUserName();
         }
 
+        if ($this->isLoggedIn() && $this->isLogoutAttempt()) {
+            unset($_SESSION['login_user']);
+            $message = 'Bye bye!';
+        }
+
         $response = $this->generateLoginFormHTML($message);
 
-        if ($isAuthenticated) {
+        if ($this->isLoggedIn()) {
             $response = $this->generateLogoutButtonHTML($message);
         }
 
@@ -85,12 +90,20 @@ class LoginView {
 
 	private function validateFields() {
 	    if (empty($this->getRequestUserName())) {
-            throw new Exception("Username is missing");
+            throw new \Exception("Username is missing");
         }
 
         if (empty($this->getRequestPassword())) {
-            throw new Exception("Password is missing");
+            throw new \Exception("Password is missing");
         }
+    }
+
+    private function authenticate() {
+        if ($this->getRequestUserName() !== "Admin" || $this->getRequestPassword() !== "Password") {
+            throw new \Exception("Wrong name or password");
+        }
+
+        $_SESSION['login_user'] = $this->getRequestUserName();
     }
 
     private function getUsername() {
@@ -105,12 +118,20 @@ class LoginView {
 	    return isset($_POST[self::$login]);
     }
 
+    private function isLogoutAttempt() {
+        return isset($_POST[self::$logout]);
+    }
+
 	private function getRequestUserName() {
 	    return $_POST[self::$name];
 	}
 
     private function getRequestPassword() {
         return $_POST[self::$password];
+    }
+
+    public function isLoggedIn() {
+        return isset($_SESSION['login_user']);
     }
 	
 }

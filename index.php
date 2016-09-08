@@ -10,6 +10,8 @@ require_once('model/Authentication.php');
 error_reporting(E_ALL);
 ini_set('display_errors', 'On');
 
+session_start();
+
 $testUsers = array();
 $testUsers['admin'] = 'pass';
 
@@ -19,5 +21,5 @@ $v = new LoginView();
 $dtv = new DateTimeView();
 $lv = new LayoutView();
 
-$lv->render(false, $v, $dtv);
+$lv->render($v, $dtv);
 
