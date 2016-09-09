@@ -15,7 +15,7 @@ class LayoutView {
           ' . self::renderIsLoggedInMessage() . '
           
           <div class="container">
-              ' . $view->render() . '
+              ' . $view->show() . '
               
               ' . $dtv->show() . '
           </div>
@@ -25,7 +25,7 @@ class LayoutView {
   }
   
   private static function renderIsLoggedInMessage() {
-    if (model\Authentication::userIsAuthenticated()) {
+    if (Authentication::userIsAuthenticated()) {
       return '<h2>Logged in</h2>';
     }
     else {

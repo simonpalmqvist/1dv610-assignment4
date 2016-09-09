@@ -1,6 +1,5 @@
 <?php
 
-
 class LoginView {
 	private static $login = 'LoginView::Login';
 	private static $logout = 'LoginView::Logout';
@@ -11,45 +10,18 @@ class LoginView {
 	private static $keep = 'LoginView::KeepMeLoggedIn';
 	private static $messageId = 'LoginView::Message';
 
-	private $message = '';
+	public $message = '';
+    public $authenticated = false;
 
-	public function render() {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $this->handlePost();
+	public function show() {
+        $view = $this->generateLoginFormHTML();
+
+        if ($this->authenticated) {
+            $view = $this->generateLogoutButtonHTML();
         }
 
-        $response = $this->generateLoginFormHTML();
-
-        if (\model\Authentication::userIsAuthenticated()) {
-            $response = $this->generateLogoutButtonHTML();
-        }
-
-		return $response;
+		return $view;
 	}
-
-	private function handlePost() {
-	    if(\model\Authentication::userIsAuthenticated()) {
-            \model\Authentication::logoutUser();
-        } else {
-            try {
-                $this->validateFields();
-                \model\Authentication::loginUser($this->getRequestUserName(), $this->getRequestPassword());
-                $this->message = 'Welcome';
-            } catch (\Exception $error) {
-                $this->message = $error->getMessage();
-            }
-        }
-    }
-
-    private function validateFields() {
-        if (empty($this->getRequestUserName())) {
-            throw new \Exception("Username is missing");
-        }
-
-        if (empty($this->getRequestPassword())) {
-            throw new \Exception("Password is missing");
-        }
-    }
 
 	private function generateLogoutButtonHTML() {
 		return '
@@ -82,11 +54,15 @@ class LoginView {
 		';
 	}
 
-	private function getRequestUserName() {
-	    return isset($_POST[self::$name]) ? $_POST[self::$name] : '';
+	public function getRequestUserName() {
+	    return $this->getFormField(self::$name);
 	}
 
-    private function getRequestPassword() {
-        return $_POST[self::$password];
+    public function getRequestPassword() {
+        return $this->getFormField(self::$password);
+    }
+
+    private function getFormField($id) {
+        return isset($_POST[$id]) ? $_POST[$id] : '';
     }
 }
