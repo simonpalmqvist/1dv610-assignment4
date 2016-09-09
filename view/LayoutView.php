@@ -3,11 +3,7 @@
 
 class LayoutView {
   
-  public function render(LoginView $v, DateTimeView $dtv) {
-      $renderedLoginView = $v->response();
-      $isLoggedIn = $v->isLoggedIn();
-
-
+  public static function render(LoginView $view, DateTimeView $dtv) {
     echo '<!DOCTYPE html>
       <html>
         <head>
@@ -16,10 +12,10 @@ class LayoutView {
         </head>
         <body>
           <h1>Assignment 2</h1>
-          ' . $this->renderIsLoggedIn($isLoggedIn) . '
+          ' . self::renderIsLoggedInMessage() . '
           
           <div class="container">
-              ' . $renderedLoginView . '
+              ' . $view->render() . '
               
               ' . $dtv->show() . '
           </div>
@@ -28,8 +24,8 @@ class LayoutView {
     ';
   }
   
-  private function renderIsLoggedIn($isLoggedIn) {
-    if ($isLoggedIn) {
+  private static function renderIsLoggedInMessage() {
+    if (model\Authentication::userIsAuthenticated()) {
       return '<h2>Logged in</h2>';
     }
     else {

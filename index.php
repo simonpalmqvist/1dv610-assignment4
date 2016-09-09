@@ -12,14 +12,8 @@ ini_set('display_errors', 'On');
 
 session_start();
 
-$testUsers = array();
-$testUsers['admin'] = 'pass';
-
-//CREATE OBJECTS OF THE VIEWS
-$authentication = new Authentication($testUsers);
 $v = new LoginView();
 $dtv = new DateTimeView();
 $lv = new LayoutView();
 
-$lv->render($v, $dtv);
-
+LayoutView::render($v, $dtv);
