@@ -17,9 +17,9 @@ class LoginController
     }
 
     private function handlePostRequest() {
-        if(Authentication::userIsAuthenticated()) {
-            Authentication::logoutUser();
-        } else {
+        if($this->view->isRequestLogoutAttempt() && Authentication::userIsAuthenticated()) {
+            $this->handleLogout();
+        } else if ($this->view->isRequestLoginAttempt() && !Authentication::userIsAuthenticated()) {
             $this->handleLogin();
         }
     }
@@ -30,9 +30,13 @@ class LoginController
             $password = $this->view->getRequestPassword();
             Authentication::loginUser($username, $password);
             $this->view->message = 'Welcome';
-
         } catch (\Exception $error) {
             $this->view->message = $error->getMessage();
         }
+    }
+
+    private function handleLogout() {
+        Authentication::logoutUser();
+        $this->view->message = 'Bye bye!';
     }
 }

@@ -62,6 +62,14 @@ class LoginView {
         return $this->getFormField(self::$password);
     }
 
+    public function isRequestLoginAttempt() {
+        return isset($_POST[self::$login]);
+    }
+    
+    public function isRequestLogoutAttempt() {
+        return isset($_POST[self::$logout]);
+    }
+
     private function getFormField($id) {
         return isset($_POST[$id]) ? $_POST[$id] : '';
     }
