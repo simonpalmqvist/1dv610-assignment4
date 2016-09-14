@@ -13,6 +13,11 @@ class LoginController
     public function handleRequest() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $this->handlePostRequest();
+        } else {
+            if (!$this->authentication->userIsAuthenticated() && $this->authentication->validateUserCookie()) {
+                $this->authentication->loginWithCookie();
+                $this->view->message = 'Welcome back with cookie';
+            }
         }
 
         $this->view->authenticated = $this->authentication->userIsAuthenticated();
@@ -30,15 +35,15 @@ class LoginController
         try {
             $username = $this->view->getRequestUserName();
             $password = $this->view->getRequestPassword();
-            $this->authentication->loginUser($username, $password);
-            $this->view->message = 'Welcome';
+            $remember = $this->view->getRequestKeep();
+            $this->authentication->loginUser($username, $password, $remember);
+            $this->view->message = $remember ? 'Welcome and you will be remembered' : 'Welcome';
         } catch (\Exception $error) {
             $this->view->message = $error->getMessage();
         }
     }
-
     private function handleLogout() {
-        Authentication::logoutUser();
+        $this->authentication->logoutUser();
         $this->view->message = 'Bye bye!';
     }
 }
