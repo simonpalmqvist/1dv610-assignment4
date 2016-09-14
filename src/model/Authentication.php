@@ -3,9 +3,10 @@
 class Authentication
 {
     private static $userSession = 'logged_in_user';
+    private static $userAgentSession = 'HTTP_USER_AGENT';
     private static $userCookie = 'username';
     private static $passwordCookie = 'password';
-    private static $findUserQuery = 'SELECT username, password FROM users WHERE username=:username';
+    private static $findUserQuery = 'SELECT username, password FROM users WHERE username LIKE :username';
     private $db;
 
     public function __construct (PDO $db) {
@@ -29,7 +30,9 @@ class Authentication
     }
 
     public function userIsAuthenticated () {
-        return isset($_SESSION[self::$userSession]);
+        return isset($_SESSION[self::$userSession]) &&
+                isset($_SESSION[self::$userAgentSession]) &&
+                $_SESSION[self::$userAgentSession] == $_SERVER[self::$userAgentSession];
     }
 
     public function validateUserCookie () {
@@ -38,6 +41,7 @@ class Authentication
 
     private function startUserSession ($username) {
         $_SESSION[self::$userSession] = $username;
+        $_SESSION[self::$userAgentSession] = $_SERVER[self::$userAgentSession];
     }
 
     private function maybeAddCookie ($username, $password, $remember) {

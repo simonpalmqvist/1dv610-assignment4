@@ -5,8 +5,8 @@ require_once('./config.php');
 $setupUserTableQuery = "
 CREATE TABLE users (
   id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  username VARCHAR(30) NOT NULL UNIQUE,
-  password VARCHAR(255) NOT NULL,
+  username VARCHAR(30) BINARY NOT NULL UNIQUE,
+  password VARCHAR(255) BINARY NOT NULL,
   create_date TIMESTAMP
 );
 ";
