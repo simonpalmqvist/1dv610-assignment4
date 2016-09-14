@@ -1,0 +1,29 @@
+nginx:
+  restart: always
+  ports:
+    - "80:80"
+
+php:
+  restart: always
+
+app:
+  volumes:
+    - /var/www/html
+
+mysql:
+  restart: always
+  environment:
+    MYSQL_ROOT_PASSWORD: fkrfkrepogkerpogkerpogkrepgkerpgkerpogkeprokgeprokgpoerkgerop
+    MYSQL_DATABASE: auth
+    MYSQL_USER: user
+    MYSQL_PASSWORD: pass
+
+phpmyadmin:
+  restart: always
+  image: phpmyadmin/phpmyadmin
+  ports:
+    - "8080:80"
+  links:
+    - mysql
+  environment:
+    PMA_HOST: mysql

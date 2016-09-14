@@ -1,7 +1,7 @@
 nginx:
   build: ./nginx/
   ports:
-    - "80:80"
+    - "3000:80"
   links:
     - php
   volumes_from:
@@ -9,15 +9,15 @@ nginx:
 
 php:
   build: ./php/
+  volumes_from:
+    - app
   expose:
     - "9000"
   links:
     - mysql
-  volumes_from:
-    - app
 
 app:
-  image: php:7.0-fpm
+  build: ./
   volumes:
     - ./src:/var/www/html
   command: "true"
@@ -33,10 +33,11 @@ mysql:
     MYSQL_DATABASE: auth
     MYSQL_USER: user
     MYSQL_PASSWORD: pass
+
 data:
   image: mysql:latest
   volumes:
-    - ./data:/var/lib/mysql
+    - /var/lib/mysql
   command: "true"
 
 phpmyadmin:
