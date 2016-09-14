@@ -3,9 +3,11 @@
 class LoginController
 {
     private $view;
+    private $authentication;
 
-    public function __construct(\LoginView $loginView) {
+    public function __construct(\LoginView $loginView, \Authentication $authentication) {
         $this->view = $loginView;
+        $this->authentication = $authentication;
     }
 
     public function handleRequest() {
@@ -13,13 +15,13 @@ class LoginController
             $this->handlePostRequest();
         }
 
-        $this->view->authenticated = Authentication::userIsAuthenticated();
+        $this->view->authenticated = $this->authentication->userIsAuthenticated();
     }
 
     private function handlePostRequest() {
-        if($this->view->isRequestLogoutAttempt() && Authentication::userIsAuthenticated()) {
+        if($this->view->isRequestLogoutAttempt() && $this->authentication->userIsAuthenticated()) {
             $this->handleLogout();
-        } else if ($this->view->isRequestLoginAttempt() && !Authentication::userIsAuthenticated()) {
+        } else if ($this->view->isRequestLoginAttempt() && !$this->authentication->userIsAuthenticated()) {
             $this->handleLogin();
         }
     }
@@ -28,7 +30,7 @@ class LoginController
         try {
             $username = $this->view->getRequestUserName();
             $password = $this->view->getRequestPassword();
-            Authentication::loginUser($username, $password);
+            $this->authentication->loginUser($username, $password);
             $this->view->message = 'Welcome';
         } catch (\Exception $error) {
             $this->view->message = $error->getMessage();

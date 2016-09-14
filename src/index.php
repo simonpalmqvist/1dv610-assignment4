@@ -7,15 +7,11 @@ require_once('./view/DateTimeView.php');
 require_once('./view/LayoutView.php');
 require_once('./controller/LoginController.php');
 
-
-foreach($db->query('SHOW TABLES') as $row) {
-    echo $row[0];
-}
-
+$authentication = new Authentication($db);
 $view = new LoginView();
 $dateTimeView = new DateTimeView();
-$loginController = new LoginController($view);
+$loginController = new LoginController($view, $authentication);
 
 $loginController->handleRequest();
 
-LayoutView::render($view, $dateTimeView);
+LayoutView::render($authentication->userIsAuthenticated(), $view, $dateTimeView);

@@ -3,7 +3,7 @@
 
 class LayoutView {
   
-  public static function render(LoginView $view, DateTimeView $dtv) {
+  public static function render(bool $isAuthenticated, LoginView $view, DateTimeView $dtv) {
     echo '<!DOCTYPE html>
       <html>
         <head>
@@ -12,7 +12,7 @@ class LayoutView {
         </head>
         <body>
           <h1>Assignment 2</h1>
-          ' . self::renderIsLoggedInMessage() . '
+          ' . self::renderIsLoggedInMessage($isAuthenticated) . '
           
           <div class="container">
               ' . $view->show() . '
@@ -24,12 +24,7 @@ class LayoutView {
     ';
   }
   
-  private static function renderIsLoggedInMessage() {
-    if (Authentication::userIsAuthenticated()) {
-      return '<h2>Logged in</h2>';
-    }
-    else {
-      return '<h2>Not logged in</h2>';
-    }
+  private static function renderIsLoggedInMessage(bool $isAuthenticated) {
+      return $isAuthenticated ? '<h2>Logged in</h2>' : '<h2>Not logged in</h2>';
   }
 }
