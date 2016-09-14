@@ -1,0 +1,19 @@
+nginx:
+  ports:
+    - "3000:80"
+
+app:
+  volumes:
+    - ./src:/var/www/html
+
+data:
+  volumes:
+    - ./data:/var/lib/mysql
+
+mysql:
+  environment:
+    MYSQL_ROOT_PASSWORD: pass
+    MYSQL_DATABASE: auth
+    MYSQL_USER: user
+    MYSQL_PASSWORD: pass
+
