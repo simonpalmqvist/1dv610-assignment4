@@ -10,23 +10,32 @@ class Auth {
 
     public function __construct (\PDO $dbConnection) {
         $this->users = new Users($dbConnection);
-        // Create Cookie object
     }
 
     public function loginUserWithCredentials (string $username, string $password, bool $rememberLogin) {
         $this->validateCredentials($username, $password);
-        UserSession::setWith($username, $this->hashPassword($password), $rememberLogin);
+        UserSession::setWith($username);
+        if ($rememberLogin) {
+            $this->setCookieFor($username);
+        }
     }
 
-    public function tryLoginUserWithCookies () : bool {
-        $validCookies = UserSession::hasValidCookies();
-        if ($validCookies)
-            UserSession::setWithCookies();
+    public function canLoginWithCookies () : bool {
+        return UserSession::hasCookiesSet();
+    }
 
-        return $validCookies;
+    public function LoginUserWithCookies () {
+        try {
+            $this->users->findUserWithCookie(UserSession::getCookieUsername(), UserSession::getCookiePassword());
+            $this->startSession(UserSession::getCookieUsername());
+            $this->setCookieFor(UserSession::getCookieUsername());
+        } catch (\Exception $exception) {
+            throw new \Exception('Wrong information in cookies');
+        }
     }
 
     public function logoutUser () {
+        $this->users->removeUserCookie(UserSession::getSessionUsername()); // removes cookie
         UserSession::destroy();
     }
 
@@ -59,8 +68,14 @@ class Auth {
             throw new \Exception("Password is not correct");
     }
 
-    private function hashPassword (string $password) : string {
-        return password_hash($password, PASSWORD_DEFAULT);
+    private function startSession (string $username) {
+        UserSession::setWith($username);
+    }
+
+    private function setCookieFor (string $username) {
+        $secret = bin2hex(random_bytes(60));
+        UserSession::setCookies($secret);
+        $this->users->updateUserWithCookie($username, $secret);
     }
 
 }

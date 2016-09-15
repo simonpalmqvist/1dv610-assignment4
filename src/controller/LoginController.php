@@ -14,12 +14,21 @@ class LoginController
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $this->handlePostRequest();
         } else {
-            if (!$this->authentication->userIsAuthenticated() && $this->authentication->tryLoginUserWithCookies()) {
-                $this->view->message = 'Welcome back with cookie';
+            if (!$this->authentication->userIsAuthenticated() && $this->authentication->canLoginWithCookies()) {
+                $this->handleLoginWithCookie();
             }
         }
 
         $this->view->authenticated = $this->authentication->userIsAuthenticated();
+    }
+
+    private function handleLoginWithCookie () {
+        try {
+            $this->authentication->LoginUserWithCookies();
+            $this->view->message = 'Welcome back with cookie';
+        } catch (\Exception $exception) {
+            $this->view->message = 'Wrong information in cookies';
+        }
     }
 
     private function handlePostRequest() {
