@@ -5,7 +5,7 @@ class LoginController
     private $view;
     private $authentication;
 
-    public function __construct(\LoginView $loginView, \Authentication $authentication) {
+    public function __construct(\LoginView $loginView, \auth\model\Auth $authentication) {
         $this->view = $loginView;
         $this->authentication = $authentication;
     }
@@ -14,8 +14,7 @@ class LoginController
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $this->handlePostRequest();
         } else {
-            if (!$this->authentication->userIsAuthenticated() && $this->authentication->validateUserCookie()) {
-                $this->authentication->loginWithCookie();
+            if (!$this->authentication->userIsAuthenticated() && $this->authentication->tryLoginUserWithCookies()) {
                 $this->view->message = 'Welcome back with cookie';
             }
         }
@@ -36,7 +35,7 @@ class LoginController
             $username = $this->view->getRequestUserName();
             $password = $this->view->getRequestPassword();
             $remember = $this->view->getRequestKeep();
-            $this->authentication->loginUser($username, $password, $remember);
+            $this->authentication->loginUserWithCredentials($username, $password, $remember);
             $this->view->message = $remember ? 'Welcome and you will be remembered' : 'Welcome';
         } catch (\Exception $error) {
             $this->view->message = $error->getMessage();
