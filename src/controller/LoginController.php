@@ -19,6 +19,12 @@ class LoginController
             }
         }
 
+        if (isset($_SESSION['registered_user'])) {
+            $this->view->message = 'Registered new user.';
+            $this->view->setUsername($_SESSION['registered_user']);
+            unset($_SESSION['registered_user']);
+        }
+
         $this->view->authenticated = $this->authentication->userIsAuthenticated();
     }
 
@@ -51,6 +57,7 @@ class LoginController
             $this->authentication->loginUserWithCredentials($username, $password, $remember);
             $this->view->message = $remember ? 'Welcome and you will be remembered' : 'Welcome';
         } catch (\Exception $error) {
+            $this->view->setUsername($this->view->getRequestUserName());
             $this->view->message = $error->getMessage();
         }
     }

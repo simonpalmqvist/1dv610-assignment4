@@ -35,10 +35,9 @@ class DefaultRegistrationForm implements RegistrationForm {
 					<label for="' . self::$PASSWORD2_FIELD . '">Repeat password :</label>
 					<input type="password" id="' . self::$PASSWORD2_FIELD . '" name="' . self::$PASSWORD2_FIELD . '" />
 					
-					<input type="submit" name="' . self::$REGISTER_BUTTON . '" value="login" />
+					<input type="submit" name="' . self::$REGISTER_BUTTON . '" value="register" />
 				</fieldset>
 			</form>
-        
         ';
     }
 

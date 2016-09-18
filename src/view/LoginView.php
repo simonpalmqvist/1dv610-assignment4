@@ -8,8 +8,19 @@ class LoginView {
 	private static $keep = 'LoginView::KeepMeLoggedIn';
 	private static $messageId = 'LoginView::Message';
 
+    private $username = '';
 	public $message = '';
     public $authenticated = false;
+
+    public function generateHTML() {
+        $view = $this->generateLoginFormHTML();
+
+        if ($this->authenticated) {
+            $view = $this->generateLogoutButtonHTML();
+        }
+
+        return $view;
+    }
 
 	public function show() {
         $view = $this->generateLoginFormHTML();
@@ -38,7 +49,7 @@ class LoginView {
 					<p id="' . self::$messageId . '">' . $this->message . '</p>
 					
 					<label for="' . self::$name . '">Username :</label>
-					<input type="text" id="' . self::$name . '" name="' . self::$name . '" value="' . $this->getRequestUserName() . '" />
+					<input type="text" id="' . self::$name . '" name="' . self::$name . '" value="' . $this->username . '" />
 
 					<label for="' . self::$password . '">Password :</label>
 					<input type="password" id="' . self::$password . '" name="' . self::$password . '" />
@@ -51,6 +62,10 @@ class LoginView {
 			</form>
 		';
 	}
+
+	public function setUsername (string $username) {
+	    $this->username = $username;
+    }
 
 	public function getRequestUserName() {
 	    return $this->getFormField(self::$name);

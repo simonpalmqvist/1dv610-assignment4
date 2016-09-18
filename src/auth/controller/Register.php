@@ -57,5 +57,8 @@ class Register {
             $this->form->getRequestPassword(),
             $this->form->getRequestConfirmedPassword()
         );
+
+        $_SESSION['registered_user'] = $this->form->getRequestUsername();
+        header('location: /');
     }
 }
