@@ -19,6 +19,7 @@ $loginController = new LoginController($view, $authModel);
 $registerController = new \auth\controller\Register($db, $registrationView);
 
 if (isset($_GET['register'])) {
+    $registerController->handleRequest();
     $currentViewHTML = $registerController->getHTMLToPresent();
 } else {
     $loginController->handleRequest();

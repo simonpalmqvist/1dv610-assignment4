@@ -4,6 +4,11 @@ namespace auth\model;
 
 require_once('Users.php');
 require_once('UserSession.php');
+require_once(dirname(__FILE__) . '/../exception/UsernameAndPasswordTooShortException.php');
+require_once(dirname(__FILE__) . '/../exception/UsernameContainsInvalidCharactersException.php');
+require_once(dirname(__FILE__) . '/../exception/UsernameTooShortException.php');
+require_once(dirname(__FILE__) . '/../exception/PasswordTooShortException.php');
+require_once(dirname(__FILE__) . '/../exception/PasswordsDontMatchException.php');
 
 class Registration {
     private $users;
@@ -12,11 +17,41 @@ class Registration {
         $this->users = new Users($dbConnection);
     }
 
-    public function registerUser () {
-
+    public function registerUser (string $username, string $password, string $passwordRepeat) {
+        $this->validateCredentials($username, $password, $passwordRepeat);
     }
 
     private function validateCredentials (string $username, string $password, string $passwordRepeat) {
+        $usernameNotValid = !$this->isUsernameValid($username);
+        $passwordNotValid = !$this->isPasswordValid($password);
 
+        if ($usernameNotValid && $passwordNotValid)
+            throw new \UsernameAndPasswordTooShortException();
+
+        if ($usernameNotValid)
+            throw new \UsernameTooShortException();
+
+        if ($passwordNotValid)
+            throw new \PasswordTooShortException();
+
+        if ($this->hasInvalidCharactersInString($username)) {
+            throw new \UsernameContainsInvalidCharactersException();
+        }
+
+        if ($password !== $passwordRepeat) {
+            throw new \PasswordsDontMatchException();
+        }
+    }
+
+    private function isUsernameValid (string $username) : bool {
+        return strlen($username) > 2;
+    }
+
+    private function isPasswordValid (string $password) : bool {
+        return strlen($password) > 5;
+    }
+
+    private function hasInvalidCharactersInString (string $string) {
+        return filter_var($string, FILTER_SANITIZE_STRING) !== $string;
     }
 }

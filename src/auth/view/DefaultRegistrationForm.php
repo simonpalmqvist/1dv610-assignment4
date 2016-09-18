@@ -9,6 +9,7 @@ class DefaultRegistrationForm implements RegistrationForm {
     private static $NAME_FIELD = 'RegisterView::UserName';
     private static $PASSWORD_FIELD = 'RegisterView::Password';
     private static $PASSWORD2_FIELD = 'RegisterView::PasswordRepeat';
+    private static $MESSAGE_PARAGRAPH = 'RegisterView::Message';
 
     private $message;
 
@@ -23,10 +24,10 @@ class DefaultRegistrationForm implements RegistrationForm {
 			<form action="?register" method="post">
 				<fieldset>
 					<legend>Register a new user - Write username and password</legend>
-					<p id="message">' . implode('<br/>', $this->message) . '</p>
+					<p id="'. self::$MESSAGE_PARAGRAPH . '">' . implode('<br/>', $this->message) . '</p>
 					
 					<label for="' . self::$NAME_FIELD . '">Username :</label>
-					<input type="text" id="' . self::$NAME_FIELD . '" name="' . self::$NAME_FIELD . '" value="' . $this->getRequestUsername() . '" />
+					<input type="text" id="' . self::$NAME_FIELD . '" name="' . self::$NAME_FIELD . '" value="' . filter_var($this->getRequestUsername(), FILTER_SANITIZE_STRING) . '" />
 
 					<label for="' . self::$PASSWORD_FIELD . '">Password :</label>
 					<input type="password" id="' . self::$PASSWORD_FIELD . '" name="' . self::$PASSWORD_FIELD . '" />
