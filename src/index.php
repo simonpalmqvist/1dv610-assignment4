@@ -25,7 +25,4 @@ if (isset($_GET['register'])) {
     $currentViewHTML = $loginController->getHTMLToPresent();
 }
 
-
-
-
 LayoutView::render($authModel->userIsAuthenticated(), $currentViewHTML, $dateTimeView);
