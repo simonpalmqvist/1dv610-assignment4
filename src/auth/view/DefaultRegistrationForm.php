@@ -2,6 +2,8 @@
 
 namespace auth\view;
 
+require_once('RegistrationForm.php');
+
 class DefaultRegistrationForm implements RegistrationForm {
     private static $REGISTER_BUTTON= 'RegisterView::register';
     private static $NAME_FIELD = 'RegisterView::UserName';
@@ -21,7 +23,7 @@ class DefaultRegistrationForm implements RegistrationForm {
 			<form action="?register" method="post">
 				<fieldset>
 					<legend>Register a new user - Write username and password</legend>
-					<p id="message">' . $this->message . '</p>
+					<p id="message">' . implode('<br/>', $this->message) . '</p>
 					
 					<label for="' . self::$NAME_FIELD . '">Username :</label>
 					<input type="text" id="' . self::$NAME_FIELD . '" name="' . self::$NAME_FIELD . '" value="' . $this->getRequestUsername() . '" />
@@ -44,7 +46,11 @@ class DefaultRegistrationForm implements RegistrationForm {
     }
 
     public function getRequestUsername () : string {
-        return filter_input(INPUT_POST, self::$NAME_FIELD);
+        return filter_input(INPUT_POST, self::$NAME_FIELD, FILTER_DEFAULT, array(
+            'options' => array(
+                'default'=> ''
+            )
+        ));
     }
 
     public function getRequestPassword () : string {

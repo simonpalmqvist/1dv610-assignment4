@@ -5,7 +5,7 @@ namespace auth\model;
 require_once('Users.php');
 require_once('UserSession.php');
 
-class Auth {
+class Authentication {
     private $users;
 
     public function __construct (\PDO $dbConnection) {

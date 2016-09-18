@@ -5,7 +5,7 @@ class LoginController
     private $view;
     private $authentication;
 
-    public function __construct(\LoginView $loginView, \auth\model\Auth $authentication) {
+    public function __construct(\LoginView $loginView, \auth\model\Authentication $authentication) {
         $this->view = $loginView;
         $this->authentication = $authentication;
     }
@@ -20,6 +20,10 @@ class LoginController
         }
 
         $this->view->authenticated = $this->authentication->userIsAuthenticated();
+    }
+
+    public function getHTMLToPresent () {
+        return $this->view->show();
     }
 
     private function handleLoginWithCookie () {

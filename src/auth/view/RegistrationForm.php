@@ -8,7 +8,7 @@ interface RegistrationForm {
 
     public function isPostRequest () : bool;
 
-    public function getRequestUserName () : string;
+    public function getRequestUsername () : string;
 
     public function getRequestPassword () : string;
 
