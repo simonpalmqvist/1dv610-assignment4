@@ -16,7 +16,7 @@ $view = new LoginView();
 $registrationView = new \auth\view\DefaultRegistrationForm();
 $dateTimeView = new DateTimeView();
 $loginController = new LoginController($view, $authModel);
-$registerController = new \auth\controller\Register($db, $registrationView);
+$registerController = new \auth\controller\Register($db, $registrationView, $view);
 
 if (isset($_GET['register'])) {
     $registerController->handleRequest();
