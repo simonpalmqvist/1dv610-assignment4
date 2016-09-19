@@ -67,6 +67,7 @@ class Register {
             $this->form->getRequestConfirmedPassword()
         );
 
+        // TODO : Refactor
         $_SESSION['registered_user'] = $username;
         header('location: /index.php');
 

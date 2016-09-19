@@ -3,22 +3,25 @@
 require_once('config.php');
 require_once('auth/model/Authentication.php');
 require_once('auth/view/DefaultRegistrationForm.php');
-require_once('view/LoginView.php');
-require_once('view/DateTimeView.php');
-require_once('view/LayoutView.php');
+require_once('auth/view/DefaultLoginForm.php');
+require_once('auth/view/DefaultLogoutButton.php');
 require_once('auth/controller/Register.php');
-require_once('controller/LoginController.php');
+require_once('auth/controller/Login.php');
+require_once('view/Footer.php');
+require_once('view/Layout.php');
 
+// Views
+$registration = new \auth\view\DefaultRegistrationForm();
+$login = new \auth\view\DefaultLoginForm();
+$logout = new \auth\view\DefaultLogoutButton();
+$footer = new Footer();
 
+// Controllers
+$loginController = new \auth\controller\Login($db, $login, $logout);
+$registerController = new \auth\controller\Register($db, $registration, $login);
 
-$authModel = new \auth\model\Authentication($db);
-$view = new LoginView();
-$registrationView = new \auth\view\DefaultRegistrationForm();
-$dateTimeView = new DateTimeView();
-$loginController = new LoginController($view, $authModel);
-$registerController = new \auth\controller\Register($db, $registrationView, $view);
-
-if (isset($_GET['register'])) {
+// Router
+if (isset($_GET['register']) && !\auth\model\Authentication::userIsAuthenticated()) {
     $registerController->handleRequest();
     $currentViewHTML = $registerController->getHTMLToPresent();
 } else {
@@ -26,4 +29,5 @@ if (isset($_GET['register'])) {
     $currentViewHTML = $loginController->getHTMLToPresent();
 }
 
-LayoutView::render($authModel->userIsAuthenticated(), $currentViewHTML, $dateTimeView);
+// Render
+Layout::render(\auth\model\Authentication::userIsAuthenticated(), $currentViewHTML, $footer->generateHTML());

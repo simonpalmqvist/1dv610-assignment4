@@ -1,9 +1,9 @@
 <?php
 
 
-class LayoutView {
+class Layout {
   
-  public static function render(bool $isAuthenticated, string $currentViewHTML, DateTimeView $dtv) {
+  public static function render(bool $isAuthenticated, string $currentViewHTML, string $footerHTML) {
     echo '<!DOCTYPE html>
       <html>
         <head>
@@ -18,7 +18,7 @@ class LayoutView {
           <div class="container">
               ' . $currentViewHTML . '
               
-              ' . $dtv->show() . '
+              ' . $footerHTML . '
           </div>
          </body>
       </html>

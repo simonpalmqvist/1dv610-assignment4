@@ -4,12 +4,20 @@ namespace auth\model;
 
 require_once('Users.php');
 require_once('UserSession.php');
+require_once(dirname(__FILE__) . '/../exception/UsernameIsMissingException.php');
+require_once(dirname(__FILE__) . '/../exception/PasswordIsMissingException.php');
+require_once(dirname(__FILE__) . '/../exception/WrongUsernameOrPasswordException.php');
+require_once(dirname(__FILE__) . '/../exception/InvalidCookiesException.php');
 
 class Authentication {
     private $users;
 
     public function __construct (\PDO $dbConnection) {
         $this->users = new Users($dbConnection);
+    }
+
+    public static function userIsAuthenticated () : bool  {
+        return UserSession::isActive();
     }
 
     public function loginUserWithCredentials (string $username, string $password, bool $rememberLogin) {
@@ -30,7 +38,7 @@ class Authentication {
             $this->startSession(UserSession::getCookieUsername());
             $this->setCookieFor(UserSession::getCookieUsername());
         } catch (\Exception $exception) {
-            throw new \Exception('Wrong information in cookies');
+            throw new \InvalidCookiesException();
         }
     }
 
@@ -39,23 +47,19 @@ class Authentication {
         UserSession::destroy();
     }
 
-    public function userIsAuthenticated () : bool  {
-        return UserSession::isActive();
-    }
-
     private function validateCredentials ($username, $password) {
         if (empty($username))
-            throw new \Exception('Username is missing');
+            throw new \UsernameIsMissingException();
 
         if (empty($password))
-            throw new \Exception('Password is missing');
+            throw new \PasswordIsMissingException();
 
         $this->matchUsernameAndPassword($username, $password);
     }
 
     private function matchUsernameAndPassword(string $username, string $password) {
         if (!$this->users->userExists($username)) {
-            throw new \Exception("Wrong name or password");
+            throw new \WrongUsernameOrPasswordException();
         }
 
         $user = $this->users->findUser($username);
@@ -64,7 +68,7 @@ class Authentication {
 
     private function validatePassword (string $password, string $candidate) {
         if (!password_verify($password, $candidate))
-            throw new \Exception("Wrong name or password");
+            throw new \WrongUsernameOrPasswordException();
     }
 
     private function startSession (string $username) {
@@ -76,5 +80,4 @@ class Authentication {
         UserSession::setCookies($secret);
         $this->users->updateUserWithCookie($username, $secret);
     }
-
 }

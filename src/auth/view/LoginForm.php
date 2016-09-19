@@ -11,8 +11,20 @@ interface LoginForm {
 
     public function getRequestPassword () : string;
 
-    public function getRequestKeep () : string;
+    public function getRequestKeep () : bool;
+
+    public function setUsername (string $username);
 
     public function setMessageUsernameIsMissing ();
+
+    public function setMessagePasswordIsMissing ();
+
+    public function setMessageWrongUsernameOrPassword();
+
+    public function setMessageInvalidCookies ();
+
+    public function setMessageRegisteredUser ();
+
+    public function setMessageLogout ();
 
 }
