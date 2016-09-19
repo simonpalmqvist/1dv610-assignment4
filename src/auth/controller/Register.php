@@ -4,6 +4,7 @@ namespace auth\controller;
 
 require_once(dirname(__FILE__) . '/../model/Registration.php');
 
+use auth\view\LoginForm;
 use auth\view\RegistrationForm;
 use auth\model\Registration;
 
@@ -14,7 +15,7 @@ class Register {
     // Should not be needed only added to get test case 4.10 to pass
     private $loginView;
 
-    public function __construct (\PDO $dbConnection, RegistrationForm $form, $loginView) {
+    public function __construct (\PDO $dbConnection, RegistrationForm $form, LoginForm $loginView) {
         $this->model = new Registration($dbConnection);
         $this->form = $form;
         $this->loginView = $loginView;
@@ -37,6 +38,7 @@ class Register {
     private function tryRegisterUser () {
         try {
             $this->registerUser();
+            $this->redirectToLogin();
         } catch (\UsernameAndPasswordTooShortException $e) {
             $this->form->setMessageUsernameTooShort();
             $this->form->setMessagePasswordTooShort();
@@ -59,15 +61,15 @@ class Register {
     }
 
     private function registerUser () {
-        $username = $this->form->getRequestUsername();
-
         $this->model->registerUser(
-            $username,
+            $this->form->getRequestUsername(),
             $this->form->getRequestPassword(),
             $this->form->getRequestConfirmedPassword()
         );
+    }
 
-        // TODO : Refactor
+    private function redirectToLogin () {
+        $username = $this->form->getRequestUsername();
         $_SESSION['registered_user'] = $username;
         header('location: /index.php');
 

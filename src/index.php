@@ -10,6 +10,8 @@ require_once('auth/controller/Login.php');
 require_once('view/Footer.php');
 require_once('view/Layout.php');
 
+use \auth\model\Authentication;
+
 // Views
 $registration = new \auth\view\DefaultRegistrationForm();
 $login = new \auth\view\DefaultLoginForm();
@@ -21,7 +23,7 @@ $loginController = new \auth\controller\Login($db, $login, $logout);
 $registerController = new \auth\controller\Register($db, $registration, $login);
 
 // Router
-if (isset($_GET['register']) && !\auth\model\Authentication::userIsAuthenticated()) {
+if (filter_has_var(INPUT_GET, 'register') && !Authentication::userIsAuthenticated()) {
     $registerController->handleRequest();
     $currentViewHTML = $registerController->getHTMLToPresent();
 } else {
@@ -30,4 +32,4 @@ if (isset($_GET['register']) && !\auth\model\Authentication::userIsAuthenticated
 }
 
 // Render
-Layout::render(\auth\model\Authentication::userIsAuthenticated(), $currentViewHTML, $footer->generateHTML());
+Layout::render(Authentication::userIsAuthenticated(), $currentViewHTML, $footer->generateHTML());

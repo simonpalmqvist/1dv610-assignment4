@@ -46,13 +46,8 @@ class Login {
         } else if ($this->model->canLoginWithCookies()) {
             $this->tryLoginWithCookies();
 
-        } else {
-            // TODO : Refactor
-            if (isset($_SESSION['registered_user'])) {
-                $this->loginForm->setMessageRegisteredUser();
-                $this->loginForm->setUsername($_SESSION['registered_user']);
-                unset($_SESSION['registered_user']);
-            }
+        } else if (filter_has_var(INPUT_SESSION, 'registered_user')) {
+            $this->handleRedirectFromRegistration();
             // Maybe add redirect data
         }
     }
@@ -94,5 +89,11 @@ class Login {
         } catch (\InvalidCookiesException $e) {
             $this->loginForm->setMessageInvalidCookies();
         }
+    }
+
+    private function handleRedirectFromRegistration () {
+        $this->loginForm->setMessageRegisteredUser();
+        $this->loginForm->setUsername(filter_input(INPUT_SESSION, 'registered_user'));
+        unset($_SESSION['registered_user']);
     }
 }
