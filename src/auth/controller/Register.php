@@ -74,7 +74,7 @@ class Register {
         header('location: /index.php');
 
         // Adding this ugly hack so test 4.10 will pass, a redirect should be enough
-        $this->loginView->message = 'Registered new user.';
+        $this->loginView->setMessageRegisteredUser();
         $this->loginView->setUsername($username);
         $this->form = $this->loginView;
     }

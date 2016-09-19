@@ -5,7 +5,7 @@ namespace auth\view;
 require_once('LoginForm.php');
 
 class DefaultLoginForm implements LoginForm  {
-    private static $LOGIN_BUTTON= 'LoginView::login';
+    private static $LOGIN_BUTTON= 'LoginView::Login';
     private static $NAME_FIELD = 'LoginView::UserName';
     private static $PASSWORD_FIELD = 'LoginView::Password';
     private static $KEEP_FIELD = 'LoginView::KeepMeLoggedIn';

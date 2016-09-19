@@ -63,6 +63,7 @@ class Login {
             $this->loginForm->setMessageUsernameIsMissing();
 
         } catch (\PasswordIsMissingException $e) {
+            $this->loginForm->setUsername($this->loginForm->getRequestUsername());
             $this->loginForm->setMessagePasswordIsMissing();
         }
     }
