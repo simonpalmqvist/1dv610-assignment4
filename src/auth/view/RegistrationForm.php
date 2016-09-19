@@ -3,7 +3,6 @@
 namespace auth\view;
 
 interface RegistrationForm {
-
     public function generateHTML () : string;
 
     public function isPostRequest () : bool;
