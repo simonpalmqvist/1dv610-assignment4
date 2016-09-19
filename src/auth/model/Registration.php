@@ -20,6 +20,8 @@ class Registration {
 
     public function registerUser (string $username, string $password, string $passwordRepeat) {
         $this->validateCredentials($username, $password, $passwordRepeat);
+        $hashedPassword = $this->hashPassword($password);
+        $this->users->addUser($username, $hashedPassword);
     }
 
     private function validateCredentials (string $username, string $password, string $passwordRepeat) {
@@ -58,5 +60,9 @@ class Registration {
 
     private function hasInvalidCharactersInString (string $string) {
         return filter_var($string, FILTER_SANITIZE_STRING) !== $string;
+    }
+
+    private function hashPassword (string $password) : string {
+        return password_hash($password, PASSWORD_DEFAULT);
     }
 }

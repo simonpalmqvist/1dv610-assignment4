@@ -4,16 +4,26 @@ namespace auth\model;
 
 
 class Users {
+    private static $ADD_USER_QUERY = 'INSERT INTO users (username, password) VALUES (:username, :password)';
     private static $FIND_USER_QUERY = 'SELECT username, password FROM users WHERE username LIKE :username';
     private static $FIND_COOKIE_QUERY = 'SELECT username, cookie FROM users WHERE username LIKE :username and cookie LIKE :cookie';
     private static $UPDATE_COOKIE_QUERY = 'UPDATE users SET cookie = :cookie WHERE username LIKE :username';
     private static $REMOVE_COOKIE_QUERY = 'UPDATE users SET cookie = NULL WHERE username LIKE :username';
     private static $USERNAME_PARAM = 'username';
+    private static $PASSWORD_PARAM = 'password';
     private static $COOKIE_PARAM = 'cookie';
     private $db;
 
     public function __construct (\PDO $dbConnection) {
         $this->db = $dbConnection;
+    }
+
+    public function addUser(string $username, string $password) {
+        $params = array(
+            self::$USERNAME_PARAM => $username,
+            self::$PASSWORD_PARAM => $password
+        );
+        $this->db->prepare(self::$ADD_USER_QUERY)->execute($params);
     }
 
     public function userExists(string $username) : bool {
