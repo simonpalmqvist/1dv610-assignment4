@@ -44,11 +44,14 @@ class Register {
         } catch (\UsernameTooShortException $e) {
             $this->form->setMessageUsernameTooShort();
 
-        } catch (\PasswordTooShortException $e) {
-            $this->form->setMessagePasswordTooShort();
-
         } catch (\UsernameContainsInvalidCharactersException $e) {
             $this->form->setMessageInvalidCharactersInUsername();
+
+        } catch (\UsernameExistsException $e) {
+            $this->form->setMessageUsernameExists();
+
+        } catch (\PasswordTooShortException $e) {
+            $this->form->setMessagePasswordTooShort();
 
         } catch (\PasswordsDontMatchException $e) {
             $this->form->setMessagePasswordsDontMatch();

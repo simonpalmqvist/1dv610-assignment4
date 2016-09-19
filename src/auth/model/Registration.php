@@ -7,6 +7,7 @@ require_once('UserSession.php');
 require_once(dirname(__FILE__) . '/../exception/UsernameAndPasswordTooShortException.php');
 require_once(dirname(__FILE__) . '/../exception/UsernameContainsInvalidCharactersException.php');
 require_once(dirname(__FILE__) . '/../exception/UsernameTooShortException.php');
+require_once(dirname(__FILE__) . '/../exception/UsernameExistsException.php');
 require_once(dirname(__FILE__) . '/../exception/PasswordTooShortException.php');
 require_once(dirname(__FILE__) . '/../exception/PasswordsDontMatchException.php');
 
@@ -40,6 +41,10 @@ class Registration {
 
         if ($password !== $passwordRepeat) {
             throw new \PasswordsDontMatchException();
+        }
+
+        if ($this->users->userExists($username)) {
+            throw new \UsernameExistsException();
         }
     }
 

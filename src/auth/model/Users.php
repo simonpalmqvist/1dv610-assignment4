@@ -16,6 +16,17 @@ class Users {
         $this->db = $dbConnection;
     }
 
+    public function userExists(string $username) : bool {
+        $userExists = false;
+        try {
+            $this->findUser($username);
+            $userExists = true;
+        } catch (\Exception $e) {
+        }
+
+        return $userExists;
+    }
+
     public function findUser (string $username) : array {
         return $this->fetchFromDbWith(self::$FIND_USER_QUERY, array(self::$USERNAME_PARAM => $username));
     }

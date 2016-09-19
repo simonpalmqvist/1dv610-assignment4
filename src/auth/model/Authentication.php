@@ -54,18 +54,17 @@ class Authentication {
     }
 
     private function matchUsernameAndPassword(string $username, string $password) {
-        try {
-            $user = $this->users->findUser($username);
-            $this->validatePassword($password, $user['password']);
-
-        } catch (\Exception $exception) {
+        if (!$this->users->userExists($username)) {
             throw new \Exception("Wrong name or password");
         }
+
+        $user = $this->users->findUser($username);
+        $this->validatePassword($password, $user['password']);
     }
 
     private function validatePassword (string $password, string $candidate) {
         if (!password_verify($password, $candidate))
-            throw new \Exception("Password is not correct");
+            throw new \Exception("Wrong name or password");
     }
 
     private function startSession (string $username) {
