@@ -4,7 +4,6 @@ namespace auth\controller;
 
 require_once(dirname(__FILE__) . '/../model/Registration.php');
 
-use auth\view\LoginForm;
 use auth\view\RegistrationForm;
 use auth\model\Registration;
 
@@ -12,13 +11,9 @@ class Register {
     private $model;
     private $form;
 
-    // Should not be needed only added to get test case 4.10 to pass
-    private $loginView;
-
-    public function __construct (\PDO $dbConnection, RegistrationForm $form, LoginForm $loginView) {
+    public function __construct (\PDO $dbConnection, RegistrationForm $form) {
         $this->model = new Registration($dbConnection);
         $this->form = $form;
-        $this->loginView = $loginView;
     }
 
     public function getHTMLToPresent () : string {
@@ -71,11 +66,7 @@ class Register {
     private function redirectToLogin () {
         $username = $this->form->getRequestUsername();
         $_SESSION['registered_user'] = $username;
-        header('location: /index.php');
-
-        // Adding this ugly hack so test 4.10 will pass, a redirect should be enough
-        $this->loginView->setMessageRegisteredUser();
-        $this->loginView->setUsername($username);
-        $this->form = $this->loginView;
+        header('Location: /index.php');
+        exit();
     }
 }
