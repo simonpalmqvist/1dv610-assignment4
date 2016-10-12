@@ -2,7 +2,7 @@
 
 namespace auth\model;
 
-require_once('Users.php');
+require_once('UsersDB.php');
 require_once('UserSession.php');
 require_once(dirname(__FILE__) . '/../exception/UsernameIsMissingException.php');
 require_once(dirname(__FILE__) . '/../exception/PasswordIsMissingException.php');
@@ -12,8 +12,8 @@ require_once(dirname(__FILE__) . '/../exception/InvalidCookiesException.php');
 class Authentication {
     private $users;
 
-    public function __construct (\PDO $dbConnection) {
-        $this->users = new Users($dbConnection);
+    public function __construct () {
+        $this->users = new UsersDB();
     }
 
     public static function userIsAuthenticated () : bool  {

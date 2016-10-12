@@ -13,8 +13,8 @@ class Login {
     private $loginForm;
     private $logoutButton;
 
-    public function __construct (\PDO $db, LoginForm $loginForm, LogoutButton $logoutButton) {
-        $this->model = new Authentication($db);
+    public function __construct (LoginForm $loginForm, LogoutButton $logoutButton) {
+        $this->model = new Authentication();
         $this->loginForm = $loginForm;
         $this->logoutButton = $logoutButton;
     }

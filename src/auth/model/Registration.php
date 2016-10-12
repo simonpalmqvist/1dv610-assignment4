@@ -2,7 +2,7 @@
 
 namespace auth\model;
 
-require_once('Users.php');
+require_once('UsersDB.php');
 require_once('UserSession.php');
 require_once(dirname(__FILE__) . '/../exception/UsernameAndPasswordTooShortException.php');
 require_once(dirname(__FILE__) . '/../exception/UsernameContainsInvalidCharactersException.php');
@@ -14,8 +14,8 @@ require_once(dirname(__FILE__) . '/../exception/PasswordsDontMatchException.php'
 class Registration {
     private $users;
 
-    public function __construct (\PDO $dbConnection) {
-        $this->users = new Users($dbConnection);
+    public function __construct () {
+        $this->users = new UsersDB();
     }
 
     public function registerUser (string $username, string $password, string $passwordRepeat) {

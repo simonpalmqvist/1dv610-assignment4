@@ -10,6 +10,8 @@ require_once('auth/controller/Login.php');
 require_once('view/Footer.php');
 require_once('view/Layout.php');
 
+session_start();
+
 // Includes class Authentication to check if users are authenticated with static function isAuthenticated.
 use \auth\model\Authentication;
 
@@ -20,11 +22,11 @@ $logout = new \auth\view\DefaultLogoutButton();
 $footer = new Footer();
 
 // Controllers
-$loginController = new \auth\controller\Login($db, $login, $logout);
-$registerController = new \auth\controller\Register($db, $registration);
+$loginController = new \auth\controller\Login($login, $logout);
+$registerController = new \auth\controller\Register($registration);
 
 // Router - can only reach register controller if not authenticated
-if (filter_has_var(INPUT_GET, 'register') && !Authentication::userIsAuthenticated()) {
+if (Layout::getWantsToRegister() && !Authentication::userIsAuthenticated()) {
     $registerController->handleRequest();
     $currentViewHTML = $registerController->getHTMLToPresent();
 } else {
@@ -34,3 +36,5 @@ if (filter_has_var(INPUT_GET, 'register') && !Authentication::userIsAuthenticate
 
 // Render out output to send to browser
 Layout::render(Authentication::userIsAuthenticated(), $currentViewHTML, $footer->generateHTML());
+
+

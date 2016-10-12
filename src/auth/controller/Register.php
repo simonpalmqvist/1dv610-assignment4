@@ -11,8 +11,8 @@ class Register {
     private $model;
     private $form;
 
-    public function __construct (\PDO $dbConnection, RegistrationForm $form) {
-        $this->model = new Registration($dbConnection);
+    public function __construct (RegistrationForm $form) {
+        $this->model = new Registration();
         $this->form = $form;
     }
 

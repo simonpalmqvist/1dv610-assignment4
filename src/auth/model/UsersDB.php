@@ -2,8 +2,18 @@
 
 namespace auth\model;
 
+require_once(dirname(__FILE__) . '/../../config.php');
 
-class Users {
+class UsersDB {
+    private static $SCHEMA = '
+    CREATE TABLE users (
+            id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            username VARCHAR(30) BINARY NOT NULL UNIQUE,
+            password VARCHAR(255) BINARY NOT NULL,
+            cookie VARCHAR(255) BINARY,
+            create_date TIMESTAMP
+        );
+    ';
     private static $ADD_USER_QUERY = 'INSERT INTO users (username, password) VALUES (:username, :password)';
     private static $FIND_USER_QUERY = 'SELECT username, password FROM users WHERE username LIKE :username';
     private static $FIND_COOKIE_QUERY = 'SELECT username, cookie FROM users WHERE username LIKE :username and cookie LIKE :cookie';
@@ -14,8 +24,15 @@ class Users {
     private static $COOKIE_PARAM = 'cookie';
     private $db;
 
-    public function __construct (\PDO $dbConnection) {
-        $this->db = $dbConnection;
+    public function __construct () {
+        try {
+            $this->db = new \PDO('mysql:host=' . \Config::getHost() . ';dbname=' . \Config::getDbName() . '',
+                \Config::getUser(),
+                \Config::getPass());
+
+        } catch (\PDOException $exception) {
+            echo "Couldn't connect to database";
+        }
     }
 
     public function addUser(string $username, string $password) {
@@ -69,5 +86,9 @@ class Users {
             throw new \Exception('Not found in DB');
 
         return $result;
+    }
+
+    public function setup () {
+        $this->db->exec(self::$SCHEMA);
     }
 }

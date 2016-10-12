@@ -1,6 +1,6 @@
 <?php
 
-require_once('config.php');
-require_once('auth/setup.php');
+require_once('auth/model/UsersDB.php');
 
-\auth\Table::setup($db);
+$users = new \auth\model\UsersDB();
+$users->setup();
