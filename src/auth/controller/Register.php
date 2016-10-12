@@ -6,13 +6,14 @@ require_once(dirname(__FILE__) . '/../model/Registration.php');
 
 use auth\view\RegistrationForm;
 use auth\model\Registration;
+use auth\model\UsersDB;
 
 class Register {
     private $model;
     private $form;
 
     public function __construct (RegistrationForm $form) {
-        $this->model = new Registration();
+        $this->model = new Registration(new UsersDB());
         $this->form = $form;
     }
 

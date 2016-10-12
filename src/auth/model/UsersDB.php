@@ -3,8 +3,17 @@
 namespace auth\model;
 
 require_once(dirname(__FILE__) . '/../../config.php');
+require_once('Users.php');
 
-class UsersDB {
+class UsersDB implements Users {
+    private static $USERNAME_PARAM = 'username';
+    private static $PASSWORD_PARAM = 'password';
+    private static $COOKIE_PARAM = 'cookie';
+    private static $ADD_USER_QUERY = 'INSERT INTO users (username, password) VALUES (:username, :password)';
+    private static $FIND_USER_QUERY = 'SELECT username, password FROM users WHERE username LIKE :username';
+    private static $FIND_COOKIE_QUERY = 'SELECT username, cookie FROM users WHERE username LIKE :username and cookie LIKE :cookie';
+    private static $UPDATE_COOKIE_QUERY = 'UPDATE users SET cookie = :cookie WHERE username LIKE :username';
+    private static $REMOVE_COOKIE_QUERY = 'UPDATE users SET cookie = NULL WHERE username LIKE :username';
     private static $SCHEMA = '
     CREATE TABLE users (
             id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -14,14 +23,6 @@ class UsersDB {
             create_date TIMESTAMP
         );
     ';
-    private static $ADD_USER_QUERY = 'INSERT INTO users (username, password) VALUES (:username, :password)';
-    private static $FIND_USER_QUERY = 'SELECT username, password FROM users WHERE username LIKE :username';
-    private static $FIND_COOKIE_QUERY = 'SELECT username, cookie FROM users WHERE username LIKE :username and cookie LIKE :cookie';
-    private static $UPDATE_COOKIE_QUERY = 'UPDATE users SET cookie = :cookie WHERE username LIKE :username';
-    private static $REMOVE_COOKIE_QUERY = 'UPDATE users SET cookie = NULL WHERE username LIKE :username';
-    private static $USERNAME_PARAM = 'username';
-    private static $PASSWORD_PARAM = 'password';
-    private static $COOKIE_PARAM = 'cookie';
     private $db;
 
     public function __construct () {
@@ -58,7 +59,7 @@ class UsersDB {
         return $this->fetchFromDbWith(self::$FIND_USER_QUERY, array(self::$USERNAME_PARAM => $username));
     }
 
-    public function findUserWithCookie (string $username, string $cookie) {
+    public function findUserWithCookie (string $username, string $cookie) : array {
         return $this->fetchFromDbWith(self::$FIND_COOKIE_QUERY, array(
             self::$USERNAME_PARAM => $username,
             self::$COOKIE_PARAM => $cookie

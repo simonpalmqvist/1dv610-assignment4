@@ -7,6 +7,7 @@ require_once(dirname(__FILE__) . '/../model/Authentication.php');
 use auth\view\LoginForm;
 use auth\view\LogoutButton;
 use auth\model\Authentication;
+use auth\model\UsersDB;
 
 class Login {
     private $model;
@@ -14,7 +15,7 @@ class Login {
     private $logoutButton;
 
     public function __construct (LoginForm $loginForm, LogoutButton $logoutButton) {
-        $this->model = new Authentication();
+        $this->model = new Authentication(new UsersDB());
         $this->loginForm = $loginForm;
         $this->logoutButton = $logoutButton;
     }

@@ -14,8 +14,8 @@ require_once(dirname(__FILE__) . '/../exception/PasswordsDontMatchException.php'
 class Registration {
     private $users;
 
-    public function __construct () {
-        $this->users = new UsersDB();
+    public function __construct (Users $users) {
+        $this->users = $users;
     }
 
     public function registerUser (string $username, string $password, string $passwordRepeat) {

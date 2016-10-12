@@ -12,8 +12,8 @@ require_once(dirname(__FILE__) . '/../exception/InvalidCookiesException.php');
 class Authentication {
     private $users;
 
-    public function __construct () {
-        $this->users = new UsersDB();
+    public function __construct (Users $users) {
+        $this->users = $users;
     }
 
     public static function userIsAuthenticated () : bool  {
