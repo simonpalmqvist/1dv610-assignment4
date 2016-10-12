@@ -7,7 +7,7 @@ interface LogoutButton {
 
     public function isPostRequest() : bool;
 
-    public function setWelcomeMessage(bool $rememberUser); //  $remember ? 'Welcome and you will be remembered' : 'Welcome'
+    public function setWelcomeMessage(bool $rememberUser);
 
-    public function setWelcomeWithCookiesMessage(); // Welcome back with cookie
+    public function setWelcomeWithCookiesMessage();
 }
