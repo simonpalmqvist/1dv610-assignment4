@@ -3,11 +3,12 @@
 namespace auth\controller;
 
 require_once(dirname(__FILE__) . '/../model/Authentication.php');
+require_once(dirname(__FILE__) . '/../model/DefaultUsers.php');
 
 use auth\view\LoginForm;
 use auth\view\LogoutButton;
 use auth\model\Authentication;
-use auth\model\UsersDB;
+use auth\model\DefaultUsers;
 
 class Login {
     private $model;
@@ -15,7 +16,7 @@ class Login {
     private $logoutButton;
 
     public function __construct (LoginForm $loginForm, LogoutButton $logoutButton) {
-        $this->model = new Authentication(new UsersDB());
+        $this->model = new Authentication(new DefaultUsers());
         $this->loginForm = $loginForm;
         $this->logoutButton = $logoutButton;
     }
@@ -47,7 +48,7 @@ class Login {
         } else if ($this->model->canLoginWithCookies()) {
             $this->tryLoginWithCookies();
 
-        } else if (isset($_SESSION['registered_user'])) {
+        } else if ($this->model->hasNewlyRegisteredUser()) {
             $this->handleRedirectFromRegistration();
         }
     }
@@ -94,7 +95,6 @@ class Login {
 
     private function handleRedirectFromRegistration () {
         $this->loginForm->setMessageRegisteredUser();
-        $this->loginForm->setUsername($_SESSION['registered_user']);
-        unset($_SESSION['registered_user']);
+        $this->loginForm->setUsername($this->model->getNewlyRegisteredUsername());
     }
 }

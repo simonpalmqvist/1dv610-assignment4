@@ -2,7 +2,7 @@
 
 namespace auth\model;
 
-require_once('UsersDB.php');
+require_once('Users.php');
 require_once('UserSession.php');
 require_once(dirname(__FILE__) . '/../exception/UsernameAndPasswordTooShortException.php');
 require_once(dirname(__FILE__) . '/../exception/UsernameContainsInvalidCharactersException.php');
@@ -22,6 +22,7 @@ class Registration {
         $this->validateCredentials($username, $password, $passwordRepeat);
         $hashedPassword = $this->hashPassword($password);
         $this->users->addUser($username, $hashedPassword);
+        UserSession::setNewlyRegisteredUsername($username);
     }
 
     private function validateCredentials (string $username, string $password, string $passwordRepeat) {

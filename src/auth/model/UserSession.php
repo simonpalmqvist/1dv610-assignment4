@@ -48,6 +48,18 @@ class UserSession {
         return $_COOKIE[self::$COOKIE_PASSWORD];
     }
 
+    public static function hasNewlyRegisteredUsername () : bool {
+        return isset($_SESSION['registered_user']);
+    }
+
+    public static function setNewlyRegisteredUsername ($username) {
+        $_SESSION['registered_user'] = $username;
+    }
+
+    public static function getNewlyRegisteredUsername () : string {
+        return $_SESSION['registered_user'];
+    }
+
     private static function setCookie ($name, $value) {
         setcookie($name, $value, time() + self::$COOKIE_VALID_FOR);
     }

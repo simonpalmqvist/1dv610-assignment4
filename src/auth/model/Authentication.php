@@ -2,7 +2,7 @@
 
 namespace auth\model;
 
-require_once('UsersDB.php');
+require_once('Users.php');
 require_once('UserSession.php');
 require_once(dirname(__FILE__) . '/../exception/UsernameIsMissingException.php');
 require_once(dirname(__FILE__) . '/../exception/PasswordIsMissingException.php');
@@ -34,9 +34,9 @@ class Authentication {
 
     public function LoginUserWithCookies () {
         try {
-            $this->users->findUserWithCookie(UserSession::getCookieUsername(), UserSession::getCookiePassword());
-            $this->startSession(UserSession::getCookieUsername());
-            $this->setCookieFor(UserSession::getCookieUsername());
+            $user = $this->users->findUserWithCookie(UserSession::getCookieUsername(), UserSession::getCookiePassword());
+            $this->startSession($user->getUsername());
+            $this->setCookieFor($user->getUsername());
         } catch (\Exception $exception) {
             throw new \InvalidCookiesException();
         }
@@ -45,6 +45,14 @@ class Authentication {
     public function logoutUser () {
         $this->users->removeUserCookie(UserSession::getSessionUsername()); // removes cookie
         UserSession::destroy();
+    }
+
+    public function hasNewlyRegisteredUser () {
+        return UserSession::hasNewlyRegisteredUsername();
+    }
+
+    public function getNewlyRegisteredUsername () : string {
+        return UserSession::getNewlyRegisteredUsername();
     }
 
     private function validateCredentials ($username, $password) {
@@ -63,7 +71,7 @@ class Authentication {
         }
 
         $user = $this->users->findUser($username);
-        $this->validatePassword($password, $user['password']);
+        $this->validatePassword($password, $user->getPassword());
     }
 
     private function validatePassword (string $password, string $candidate) {

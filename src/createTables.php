@@ -2,5 +2,5 @@
 
 require_once('auth/model/UsersDB.php');
 
-$users = new \auth\model\UsersDB();
+$users = new \auth\model\DefaultUsers();
 $users->setup();

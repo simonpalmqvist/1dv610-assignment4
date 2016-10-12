@@ -3,17 +3,18 @@
 namespace auth\controller;
 
 require_once(dirname(__FILE__) . '/../model/Registration.php');
+require_once(dirname(__FILE__) . '/../model/DefaultUsers.php');
 
 use auth\view\RegistrationForm;
 use auth\model\Registration;
-use auth\model\UsersDB;
+use auth\model\DefaultUsers;
 
 class Register {
     private $model;
     private $form;
 
     public function __construct (RegistrationForm $form) {
-        $this->model = new Registration(new UsersDB());
+        $this->model = new Registration(new DefaultUsers());
         $this->form = $form;
     }
 
@@ -65,8 +66,6 @@ class Register {
     }
 
     private function redirectToLogin () {
-        $username = $this->form->getRequestUsername();
-        $_SESSION['registered_user'] = $username;
         header('Location: /index.php');
         exit();
     }

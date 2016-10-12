@@ -5,7 +5,7 @@ namespace auth\model;
 require_once(dirname(__FILE__) . '/../../config.php');
 require_once('Users.php');
 
-class UsersDB implements Users {
+class DefaultUsers implements Users {
     private static $USERNAME_PARAM = 'username';
     private static $PASSWORD_PARAM = 'password';
     private static $COOKIE_PARAM = 'cookie';
@@ -55,11 +55,11 @@ class UsersDB implements Users {
         return $userExists;
     }
 
-    public function findUser (string $username) : array {
+    public function findUser (string $username) : User {
         return $this->fetchFromDbWith(self::$FIND_USER_QUERY, array(self::$USERNAME_PARAM => $username));
     }
 
-    public function findUserWithCookie (string $username, string $cookie) : array {
+    public function findUserWithCookie (string $username, string $cookie) : User {
         return $this->fetchFromDbWith(self::$FIND_COOKIE_QUERY, array(
             self::$USERNAME_PARAM => $username,
             self::$COOKIE_PARAM => $cookie
@@ -78,7 +78,7 @@ class UsersDB implements Users {
         $this->db->prepare(self::$REMOVE_COOKIE_QUERY)->execute(array(self::$USERNAME_PARAM => $username));
     }
 
-    private function fetchFromDbWith ($query, $parameters) : array {
+    private function fetchFromDbWith ($query, $parameters) : User {
         $query = $this->db->prepare($query);
         $query->execute($parameters);
         $result = $query->fetch();
@@ -86,7 +86,7 @@ class UsersDB implements Users {
         if (!$result)
             throw new \Exception('Not found in DB');
 
-        return $result;
+        return new User($result[self::$USERNAME_PARAM], $result[self::$PASSWORD_PARAM]);
     }
 
     public function setup () {
