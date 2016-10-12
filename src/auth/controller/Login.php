@@ -3,25 +3,25 @@
 namespace auth\controller;
 
 require_once(dirname(__FILE__) . '/../model/Authentication.php');
-require_once(dirname(__FILE__) . '/../model/DefaultUsers.php');
+require_once(dirname(__FILE__) . '/../view/LoginForm.php');
+require_once(dirname(__FILE__) . '/../view/LogoutButton.php');
 
+use auth\model\Authentication;
 use auth\view\LoginForm;
 use auth\view\LogoutButton;
-use auth\model\Authentication;
-use auth\model\DefaultUsers;
 
 class Login {
     private $model;
     private $loginForm;
     private $logoutButton;
 
-    public function __construct (LoginForm $loginForm, LogoutButton $logoutButton) {
-        $this->model = new Authentication(new DefaultUsers());
+    public function __construct (Authentication $authentication, LoginForm $loginForm, LogoutButton $logoutButton) {
+        $this->model = $authentication;
         $this->loginForm = $loginForm;
         $this->logoutButton = $logoutButton;
     }
 
-    public function getHTMLToPresent () : string {
+    public function getHTML () : string {
         return  Authentication::userIsAuthenticated() ?
                 $this->logoutButton->generateHTML() :
                 $this->loginForm->generateHTML();

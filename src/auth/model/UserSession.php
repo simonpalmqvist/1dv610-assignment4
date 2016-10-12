@@ -5,6 +5,8 @@ namespace auth\model;
 
 class UserSession {
     private static $SESSION_NAME = 'logged_in_user';
+    private static $SESSION_NEW_USER = 'registered_user';
+    private static $HTTP_USER_AGENT = 'HTTP_USER_AGENT';
     private static $COOKIE_USERNAME = 'LoginView::CookieName';
     private static $COOKIE_PASSWORD = 'LoginView::CookiePassword';
     private static $COOKIE_VALID_FOR = 2592000; // 30 days
@@ -12,7 +14,7 @@ class UserSession {
     public static function setWith (string $username) {
         session_regenerate_id();
         $_SESSION[self::$SESSION_NAME] = $username;
-        $_SESSION['HTTP_USER_AGENT'] = self::getUserAgent();
+        $_SESSION[self::$HTTP_USER_AGENT] = self::getUserAgent();
     }
 
     public static function isActive () : bool {
@@ -21,7 +23,7 @@ class UserSession {
 
     public static function destroy () {
         unset($_SESSION[self::$SESSION_NAME]);
-        unset($_SESSION['HTTP_USER_AGENT']);
+        unset($_SESSION[self::$HTTP_USER_AGENT]);
         self::removeCookie(self::$COOKIE_USERNAME);
         self::removeCookie(self::$COOKIE_PASSWORD);
         session_destroy();
@@ -49,15 +51,17 @@ class UserSession {
     }
 
     public static function hasNewlyRegisteredUsername () : bool {
-        return isset($_SESSION['registered_user']);
+        return isset($_SESSION[self::$SESSION_NEW_USER]);
     }
 
     public static function setNewlyRegisteredUsername ($username) {
-        $_SESSION['registered_user'] = $username;
+        $_SESSION[self::$SESSION_NEW_USER] = $username;
     }
 
     public static function getNewlyRegisteredUsername () : string {
-        return $_SESSION['registered_user'];
+        $username = $_SESSION[self::$SESSION_NEW_USER];
+        unset($_SESSION[self::$SESSION_NEW_USER]);
+        return $username;
     }
 
     private static function setCookie ($name, $value) {
@@ -70,10 +74,10 @@ class UserSession {
     }
 
     private static function hasTheSameUserAgent () : bool {
-        return $_SESSION['HTTP_USER_AGENT'] === self::getUserAgent();
+        return $_SESSION[self::$HTTP_USER_AGENT] === self::getUserAgent();
     }
 
     private static function getUserAgent () : string {
-        return filter_input(INPUT_SERVER, 'HTTP_USER_AGENT');
+        return filter_input(INPUT_SERVER, self::$HTTP_USER_AGENT);
     }
 }

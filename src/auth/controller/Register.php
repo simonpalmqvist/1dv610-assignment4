@@ -3,22 +3,21 @@
 namespace auth\controller;
 
 require_once(dirname(__FILE__) . '/../model/Registration.php');
-require_once(dirname(__FILE__) . '/../model/DefaultUsers.php');
+require_once(dirname(__FILE__) . '/../view/RegistrationForm.php');
 
 use auth\view\RegistrationForm;
 use auth\model\Registration;
-use auth\model\DefaultUsers;
 
 class Register {
     private $model;
     private $form;
 
-    public function __construct (RegistrationForm $form) {
-        $this->model = new Registration(new DefaultUsers());
+    public function __construct (Registration $model, RegistrationForm $form) {
+        $this->model = $model;
         $this->form = $form;
     }
 
-    public function getHTMLToPresent () : string {
+    public function getHTML () : string {
         return $this->form->generateHTML();
     }
 
