@@ -23,8 +23,6 @@ mysql:
 
 app:
   image: php:7.0-fpm
-  volumes:
-    - ./src:/var/www/html
 
 data:
   image: mysql:latest

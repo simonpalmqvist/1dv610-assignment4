@@ -14,7 +14,7 @@ class Layout {
           <title>Login Example</title>
         </head>
         <body>
-          <h1>Assignment 2</h1>
+          <h1>Assignment 4</h1>
           ' . self::renderNavigation($isAuthenticated) .  '
           ' . self::renderIsLoggedInMessage($isAuthenticated) . '
           

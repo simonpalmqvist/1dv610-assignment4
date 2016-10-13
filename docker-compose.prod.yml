@@ -6,6 +6,10 @@ nginx:
 php:
   restart: always
 
+app:
+  volumes:
+    - /var/www/html/src:/var/www/html
+
 data:
   volumes:
     - /var/lib/mysql
