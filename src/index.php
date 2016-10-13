@@ -1,5 +1,7 @@
 <?php
 
+require_once('Config.php');
+
 require_once('auth/Auth.php');
 require_once('auth/model/DefaultUsers.php');
 require_once('auth/view/DefaultRegistrationForm.php');
@@ -13,8 +15,15 @@ session_start();
 
 $footer = new Footer();
 
+try {
+    $connectionInfo = 'mysql:host=' . Config::getHost() . ';dbname=' . Config::getDbName() . '';
+    $db = new \PDO($connectionInfo, Config::getUser(), Config::getPass());
+} catch (\PDOException $exception) {
+    echo "Couldn't connect to database";
+}
+
 // Using auth default views and user storage
-$users = new \auth\model\DefaultUsers();
+$users = new \auth\model\DefaultUsers($db);
 $login = new \auth\view\DefaultLoginForm();
 $logout = new \auth\view\DefaultLogoutButton();
 $registration = new \auth\view\DefaultRegistrationForm();

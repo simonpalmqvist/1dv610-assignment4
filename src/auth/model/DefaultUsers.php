@@ -2,38 +2,32 @@
 
 namespace auth\model;
 
-require_once(dirname(__FILE__) . '/../../config.php');
 require_once('Users.php');
+require_once('User.php');
 
 class DefaultUsers implements Users {
     private static $USERNAME_PARAM = 'username';
     private static $PASSWORD_PARAM = 'password';
     private static $COOKIE_PARAM = 'cookie';
+    private static $SCHEMA = '
+       CREATE TABLE users (
+          id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+          username VARCHAR(30) BINARY NOT NULL UNIQUE,
+          password VARCHAR(255) BINARY NOT NULL,
+          cookie VARCHAR(255) BINARY,
+          create_date TIMESTAMP
+       );
+    ';
     private static $ADD_USER_QUERY = 'INSERT INTO users (username, password) VALUES (:username, :password)';
     private static $FIND_USER_QUERY = 'SELECT username, password FROM users WHERE username LIKE :username';
     private static $FIND_COOKIE_QUERY = 'SELECT username, cookie FROM users WHERE username LIKE :username and cookie LIKE :cookie';
     private static $UPDATE_COOKIE_QUERY = 'UPDATE users SET cookie = :cookie WHERE username LIKE :username';
     private static $REMOVE_COOKIE_QUERY = 'UPDATE users SET cookie = NULL WHERE username LIKE :username';
-    private static $SCHEMA = '
-    CREATE TABLE users (
-            id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-            username VARCHAR(30) BINARY NOT NULL UNIQUE,
-            password VARCHAR(255) BINARY NOT NULL,
-            cookie VARCHAR(255) BINARY,
-            create_date TIMESTAMP
-        );
-    ';
+
     private $db;
 
-    public function __construct () {
-        try {
-            $this->db = new \PDO('mysql:host=' . \Config::getHost() . ';dbname=' . \Config::getDbName() . '',
-                \Config::getUser(),
-                \Config::getPass());
-
-        } catch (\PDOException $exception) {
-            echo "Couldn't connect to database";
-        }
+    public function __construct (\PDO $db) {
+        $this->db = $db;
     }
 
     public function addUser(string $username, string $password) {

@@ -11,6 +11,7 @@ TBA
 * run `eval $(docker-machine env default)`
 * run `./dev.sh`
 * execute setup file `docker-compose run --rm php php createTables.php`
+* run `docker-machine ip` to find out on which IP your application is running and verify that you can reach the start page on port 3000.
 
 ## Default Production environment
 
@@ -32,3 +33,5 @@ docker-machine ssh 1dv610-assignment-2 "ufw --force enable"
 * run `./production.sh`
 * update credentials in phpmyadmin to match config.php
 * execute setup file `docker-compose run --rm --no-deps php php createTables.php`
+* check so tables are created in phpmyadmin
+* disable access to phpmyadmin `docker-machine ssh 1dv610-assignment-2 "ufw delete allow 8080"`

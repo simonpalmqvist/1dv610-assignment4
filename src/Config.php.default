@@ -1,0 +1,28 @@
+<?php
+
+class Config {
+    private static $HOST = 'mysql';
+    private static $DB_NAME = 'auth';
+    private static $USER = 'user';
+    private static $PASS = 'pass';
+
+    public static function getDbName()
+    {
+        return self::$DB_NAME;
+    }
+
+    public static function getHost()
+    {
+        return self::$HOST;
+    }
+
+    public static function getUser()
+    {
+        return self::$USER;
+    }
+
+    public static function getPass()
+    {
+        return self::$PASS;
+    }
+}
