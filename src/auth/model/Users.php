@@ -5,9 +5,9 @@ namespace auth\model;
 require_once('User.php');
 
 interface Users {
-    public function addUser(string $username, string $password);
+    public function addUser (string $username, string $password);
 
-    public function userExists(string $username) : bool;
+    public function userExists (string $username) : bool;
 
     public function findUser (string $username) : User; // Should throw \Exception if not found
 

@@ -41,7 +41,7 @@ class Login {
         }
     }
 
-    private function handleGuest() {
+    private function handleGuest () {
         if ($this->loginForm->isPostRequest()) {
             $this->tryLoginUser();
 

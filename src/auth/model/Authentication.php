@@ -65,7 +65,7 @@ class Authentication {
         $this->matchUsernameAndPassword($username, $password);
     }
 
-    private function matchUsernameAndPassword(string $username, string $password) {
+    private function matchUsernameAndPassword (string $username, string $password) {
         if (!$this->users->userExists($username)) {
             throw new \WrongUsernameOrPasswordException();
         }

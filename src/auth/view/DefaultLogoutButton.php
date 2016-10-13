@@ -27,11 +27,11 @@ class DefaultLogoutButton implements LogoutButton  {
         return filter_has_var(INPUT_POST, self::$LOGOUT_BUTTON);
     }
 
-    public function setWelcomeMessage(bool $rememberUser) {
+    public function setWelcomeMessage (bool $rememberUser) {
         $this->message[] = $rememberUser ? 'Welcome and you will be remembered' : 'Welcome';
     }
 
-    public function setWelcomeWithCookiesMessage() {
+    public function setWelcomeWithCookiesMessage () {
         $this->message[] = 'Welcome back with cookie';
     }
 

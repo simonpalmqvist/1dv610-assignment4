@@ -5,7 +5,7 @@ class Layout {
 
   private static $REGISTER = 'register';
   
-  public static function render(bool $isAuthenticated, string $currentViewHTML, string $footerHTML) {
+  public static function render (bool $isAuthenticated, string $currentViewHTML, string $footerHTML) {
     echo '<!DOCTYPE html>
       <html>
         <head>
@@ -27,15 +27,15 @@ class Layout {
     ';
   }
 
-  public static function getWantsToRegister() {
+  public static function getWantsToRegister () : bool {
       return filter_has_var(INPUT_GET, self::$REGISTER);
   }
   
-  private static function renderIsLoggedInMessage(bool $isAuthenticated) : string {
+  private static function renderIsLoggedInMessage (bool $isAuthenticated) : string {
       return $isAuthenticated ? '<h2>Logged in</h2>' : '<h2>Not logged in</h2>';
   }
 
-  private static function renderNavigation(bool $isAuthenticated) : string {
+  private static function renderNavigation (bool $isAuthenticated) : string {
       if ($isAuthenticated) {
           return '';
       }

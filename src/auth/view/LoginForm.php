@@ -19,7 +19,7 @@ interface LoginForm {
 
     public function setMessagePasswordIsMissing ();
 
-    public function setMessageWrongUsernameOrPassword();
+    public function setMessageWrongUsernameOrPassword ();
 
     public function setMessageInvalidCookies ();
 

@@ -60,7 +60,7 @@ class DefaultLoginForm implements LoginForm  {
         return filter_input(INPUT_POST, self::$PASSWORD_FIELD, FILTER_SANITIZE_STRING);
     }
 
-    public function getRequestKeep() : bool {
+    public function getRequestKeep () : bool {
         return filter_input(INPUT_POST, self::$KEEP_FIELD, FILTER_VALIDATE_BOOLEAN, array(
             'options' => array (
                 'default' => false
@@ -76,7 +76,7 @@ class DefaultLoginForm implements LoginForm  {
         $this->message[] = 'Password is missing';
     }
 
-    public function setMessageWrongUsernameOrPassword() {
+    public function setMessageWrongUsernameOrPassword () {
         $this->message[] = 'Wrong name or password';
     }
 
