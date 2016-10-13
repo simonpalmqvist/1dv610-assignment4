@@ -53,4 +53,9 @@ class Application {
         // Render out output to send to browser
         \view\Layout::render($auth->userIsAuthenticated(), $auth->getHTML(), $footer->generateHTML());
     }
+
+    public function setupDBTables () {
+        $users = new \auth\model\DefaultUsers($this->db);
+        $users->setup();
+    }
 }

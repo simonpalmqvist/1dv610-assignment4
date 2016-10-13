@@ -1,6 +1,7 @@
 <?php
 
-require_once('auth/model/UsersDB.php');
+require_once('controller/Application.php');
 
-$users = new \auth\model\DefaultUsers();
-$users->setup();
+$application = new controller\Application();
+
+$application->setupDBTables();
