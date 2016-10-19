@@ -1,8 +1,32 @@
-# Login_1DV608
-Interface repository for 1DV608 assignment 2 and 4
+# Auth
+Repository for 1DV610 assignment 2 and 4
 
 ## Only use the Auth library
-TBA
+To only use the authentication part you need to follow these instructions.
+
+### Setup
+1. Copy the auth folder into your project.
+2. Require the Auth class (auth/Auth.php).
+3. Instantiate an auth object with following arguments
+    * An instance of the DefaultUsers class (takes a PDO instance as only argument) or an own user storage implementation of Users interface.
+    * An instance of the DefaultLoginForm class or an own implementation of the LoginForm interface.
+    * An instance of the DefaultLogoutButton class or an own implementation of the LogoutButton interface.
+    * An instance of the DefaultRegistrationForm class or an own implementation of the RegistrationForm interface.
+    
+### Use
+The API for Auth is fairly simple and has three methods that can be called
+
+#### userIsAuthenticated () : bool
+Will return a boolean telling if a user is authenticated or not.
+
+#### handle (bool $wantsToRegister)
+Will handle any incoming requests that affects the authentication/registration part. Needs an argument to tell if the request is a registering request.
+
+#### getHTML () : string
+Will return the HTML that should be presented as a string. Needs to be called after the handling because otherwise no HTML is present.
+
+To get a better overview have a look at the implementation of Auth in controller/Application.php.
+
 
 ## Setup default development environment
 * Install docker
